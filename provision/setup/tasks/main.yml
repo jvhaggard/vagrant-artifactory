@@ -1,0 +1,27 @@
+- name: Upgrade all packages
+  sudo: yes
+  yum: name=* state=latest
+
+
+- name: Install packages
+  sudo: yes
+  yum: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    #Java
+    - java-1.8.0-openjdk.x86_64
+
+- name: Download artifactory RPM
+  sudo: yes
+  get_url:
+     url: http://bit.ly/Hqvfi9
+     dest: /tmp/artifactory.rpm
+
+- name: Install artifactory RPM
+  sudo: yes
+  yum: 
+    name: /tmp/artifactory.rpm
+    state: present
+
+- name: Start artifactory
+  sudo: yes
+  service: name=artifactory state=restarted
